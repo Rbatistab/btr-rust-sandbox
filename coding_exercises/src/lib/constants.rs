@@ -1,0 +1,2 @@
+pub const MARK_ALLEN_JAVA_CHALLENGES_PATH: &str                   = "src/lib/challenges/mark_allen_java_challenges";
+pub const MARK_ALLEN_JAVA_CHALLENGES_CHAPTER_ONE_ASSERTIONS: &str = "src/lib/challenges/mark_allen_java_challenges/majc_chapter_one/text_assertions_ch_one/";

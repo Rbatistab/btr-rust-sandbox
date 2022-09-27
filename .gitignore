@@ -1,0 +1,12 @@
+# Book chapters targets
+The_Rust_Programming_language/ch1/hello_rust_cargo/target
+The_Rust_Programming_language/ch2/btr_guessing_game/target
+The_Rust_Programming_language/ch3/variables/target
+The_Rust_Programming_language/ch4/ownership/target
+The_Rust_Programming_language/ch5/structs/target
+The_Rust_Programming_language/ch6/enums_and_patterns/target
+The_Rust_Programming_language/ch7/packages_crates_modules/target
+The_Rust_Programming_language/ch8/common_collections/target
+
+# Coding exercises targets
+coding_excercises/target

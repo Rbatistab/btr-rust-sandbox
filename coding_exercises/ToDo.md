@@ -1,0 +1,4 @@
+- [ ] Finish Challenges from chapter one, just care about algorithms
+- [ ] Make a utils to have universal acces data structures and others
+- [ ] Set the unit testings
+- [ ] Continue to chapter 2 both here and in java (remember to fix java JUNIT tests)
