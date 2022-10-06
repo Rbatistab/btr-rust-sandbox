@@ -11,7 +11,7 @@
 
 // Common languages don't distinguish between both and handle with exceptions\
 
-use std::io::{ self, ErrorKind };
+use std::{io::{ self, ErrorKind, Read }, fs::File};
 
 
 fn main() {
@@ -21,9 +21,18 @@ fn main() {
     propagate_error();
 }
 
+fn make_me_panic() {
+    // panic!("Crashing, unwindind and quiting");
+    // Rust won't let you access any memory, it won't bufer overread, this is a security vulnerability
+    // let v: Vec<i32> = vec![1,2,3];
+    // v[99];
+}
+
 fn propagate_error() {
     // Propagating allows to return the error to the calling function to be handled
     read_from_file_long_way();
+    read_from_file_shorter_way();
+    read_from_file_even_shorter();
 }
 
 fn read_from_file_long_way() -> Result<String, io::Error> {
@@ -42,6 +51,33 @@ fn read_from_file_long_way() -> Result<String, io::Error> {
         Ok(_)   => Ok(s),
         Err(e)  => Err(e), // No need of return keyword here, this is the last expression
     }
+    // We don't know what the calling code will do with these valies
+}
+
+// The ? Opetator:
+//  > will call `from` function is used to convert errors from one type to another
+//  > Only works for functions with a return type Result (won't work in main unless it's output is modified)
+//  > Useful in a function that one error type that represents all the ways it might fail
+fn read_from_file_shorter_way() -> Result<String, io::Error>{
+    let mut f   = File::open("Non_existing_file")?;
+    let mut s       = String::new();
+    f.read_to_string(&mut s)?;
+    
+    // Will only return this Ok if there was an Ok, if not an Err will be returned instead
+    Ok(s)
+    
+    // ? will eliminate a lot of boiler plate
+
+
+    // One way to make it shorter:
+    // let mut s = String::new();
+    // File::open("some_file")?.read_to_string(&mut s)?;
+    // Ok(s)
+}
+
+fn read_from_file_even_shorter() -> Result<String, io::Error> {
+    use std::fs;
+    fs::read_to_string("Dont_exist")
 }
 
 fn make_me_handle_error() {
@@ -88,9 +124,43 @@ fn make_me_handle_error() {
 
 }
 
-fn make_me_panic() {
-    // panic!("Crashing, unwindind and quiting");
-    // Rust won't let you access any memory, it won't bufer overread, this is a security vulnerability
-    // let v: Vec<i32> = vec![1,2,3];
-    // v[99];
+// *** Panic vs not panic: There are some times when it's more appropiate to panic rather than handling
+// 
+//  * Yes, panic! if:
+//      > Wrinting an example (don't clutter intention with very large code)
+//      > Prototyping (use wrap/unwrap before deciding how to handle)
+//      > Testing, panic is the best test to show a failure
+//      > Could end in a bad state
+//      > External APIs return an invalid state
+//      > You make external APIs enter an invalid state (bad use of your code)
+//      > When an API/function contract is violated --> Caller side bug
+// 
+//  * Not necessary panic if:
+//      > You can ensure you won't have en Err variant (no need to overkill)
+//      > The bad state happens ocassionally
+//      > Some code needs to rely on a bad state
+//      > No good way to encode error information
+//      > Failure is expected
+//      > Rust type system can verify you have something valid (don't overkill, again)
+
+
+// Input validation example:
+struct PositiveNumberLesserThanOneHundred {
+    value: i32,
+}
+
+impl PositiveNumberLesserThanOneHundred {
+    fn new(value: i32) -> PositiveNumberLesserThanOneHundred {
+        if value < 1 || value > 100 {
+            panic!("Number should be between 1 and 100, got {}.", value);
+        }
+
+        PositiveNumberLesserThanOneHundred {
+            value
+        }
+    }
+
+    fn value(&self) -> i32 {
+        self.value
+    }
 }
