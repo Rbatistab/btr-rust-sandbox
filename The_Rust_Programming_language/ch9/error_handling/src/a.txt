@@ -1,7 +1,0 @@
-    let f = match f {
-        Ok(file)    => file,     // Instance of Ok
-        Err(error) => {         // Instance of Error
-            // println!("No file! Error: {:?}", error)
-            panic!("Problem! Error: {:?}", error)
-        },
-    };
